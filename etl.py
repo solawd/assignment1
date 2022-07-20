@@ -6,6 +6,10 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    Process songs from the supplied file
+    File must be json file
+    """
     # open song file
     df = pd.read_json(filepath, lines=True)
 
