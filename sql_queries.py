@@ -55,7 +55,7 @@ REFERENCES artists (artist_id);
 # INSERT RECORDS
 
 songplay_table_insert = ("""
-INSERT INTO song_plays (songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+INSERT INTO song_plays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 """)
 
