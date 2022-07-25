@@ -10,7 +10,7 @@ time_table_drop = "DROP TABLE IF EXISTS times;"
 
 songplay_table_create = ("""
 CREATE TABLE IF NOT EXISTS song_plays (songplay_id SERIAL PRIMARY KEY, start_time time NOT NULL, user_id int NOT NULL, level varchar, 
-song_id varchar, artist_id varchar, session_id int, location varchar, user_agent varchar);
+song_id varchar, artist_id varchar NOT NULL, session_id int, location varchar, user_agent varchar);
 """)
 
 user_table_create = ("""
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (user_id int PRIMARY KEY, first_name varchar, l
 """)
 
 song_table_create = ("""
-CREATE TABLE IF NOT EXISTS songs (song_id varchar PRIMARY KEY, title varchar, artist_id varchar, year int, duration numeric);
+CREATE TABLE IF NOT EXISTS songs (song_id varchar PRIMARY KEY, title varchar, artist_id varchar REFERENCES artists, year int, duration numeric);
 """)
 
 artist_table_create = ("""
@@ -26,8 +26,26 @@ CREATE TABLE IF NOT EXISTS artists (artist_id varchar PRIMARY KEY, name varchar,
 """)
 
 time_table_create = ("""
-CREATE TABLE IF NOT EXISTS times (start_time time, hour int, day int, week int, month int, year int, weekday int);
+CREATE TABLE IF NOT EXISTS times (time_id SERIAL PRIMARY KEY, start_time time, hour int, day int, week int, month int, year int, weekday int);
 """)
+
+foreign_key_constraints_create = """
+alter table song_plays
+add constraint fk_users
+foreign key (user_id)
+REFERENCES users (user_id);
+
+alter table song_plays
+add constraint fk_artists
+foreign key (artist_id)
+REFERENCES artists (artist_id);
+
+alter table song_plays
+add constraint fk_songs
+foreign key (song_id)
+REFERENCES songs (song_id);
+"""
+
 
 # INSERT RECORDS
 
@@ -66,5 +84,5 @@ WHERE songs.title = %s and artists.name = %s and songs.duration = %s
 
 # QUERY LISTS
 
-create_table_queries = [songplay_table_create, user_table_create, song_table_create, artist_table_create, time_table_create]
+create_table_queries = [songplay_table_create, user_table_create, song_table_create, artist_table_create, time_table_create, foreign_key_constraints_create]
 drop_table_queries = [songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
