@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (user_id int PRIMARY KEY, first_name varchar, l
 """)
 
 song_table_create = ("""
-CREATE TABLE IF NOT EXISTS songs (song_id varchar PRIMARY KEY, title varchar, artist_id varchar REFERENCES artists, year int, duration numeric);
+CREATE TABLE IF NOT EXISTS songs (song_id varchar PRIMARY KEY, title varchar, artist_id varchar, year int, duration numeric);
 """)
 
 artist_table_create = ("""
@@ -44,6 +44,11 @@ alter table song_plays
 add constraint fk_songs
 foreign key (song_id)
 REFERENCES songs (song_id);
+
+alter table songs
+add constraint fk_artists
+foreign key (artist_id)
+REFERENCES artists (artist_id);
 """
 
 
