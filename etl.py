@@ -7,10 +7,15 @@ from sql_queries import *
 
 def process_song_file(cur, filepath):
     """
-    Process songs from the supplied file
-    File must be json file
+    Process songs from the supplied json file for input into database tables
+
+            Parameters:
+                    cur (cursor): A database cursor
+                    filepath (str): A string representing the path to the file
+
+            Returns:
+                    None
     """
-    # open song file
     df = pd.read_json(filepath, lines=True)
 
     # insert song record
@@ -25,7 +30,16 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
-    # open log file
+    """
+    Process logs from the supplied file for input into database tables
+
+            Parameters:
+                    cur (cursor): A database cursor
+                    filepath (str): A string representing the path to the file
+
+            Returns:
+                    None
+    """
     df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
@@ -47,7 +61,7 @@ def process_log_file(cur, filepath):
     time_data = (timestamp, hour, day, week_of_year, month, year, weekday)
     column_labels = ('Timestamp', 'Hour', 'Day', 'Week of Year', 'Month', 'Year', 'Weekday')
 
-    #create dict from time data and columns
+    # create dict from time data and columns
     time_dict = {column_labels[x]: time_data[x] for x in range(7)}
     time_df = pd.DataFrame(time_dict)
 
@@ -79,6 +93,18 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Process songs from all json files in the supplied folder by applying the logic in the provided function
+
+            Parameters:
+                    cur (cursor): A database cursor
+                    conn (conenction): A database connection
+                    filepath (str): A string representing the path to the folder
+                    func (function): a python function to be applied to the files
+
+            Returns:
+                    None
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
